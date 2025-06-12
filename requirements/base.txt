@@ -72,7 +72,6 @@ django-import-export==4.3.7
 #django-suit==0.2.28
 django-jazzmin==3.0.1
 django-autocomplete-light==3.9.7
-django-helpdesk==0.1.18
 #mongoengine==0.11.0
 django-admin-rangefilter==0.3.0
 #django-bootstrap5==25.1
