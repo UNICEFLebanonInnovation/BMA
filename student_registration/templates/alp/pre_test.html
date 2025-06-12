@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load render_table from django_tables2 %}
+{% load bootstrap4 %}
+{% load util_tags %}
+{% bootstrap_css %}
+
+{% block extra_head %}
+    <link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui-1.12.1.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-combobox.css' %}">
+{% endblock %}
+
+{% block content-full-page-ar %}
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><h5>{% trans "ALP Pre-Test" %}</h5></li>
+            <li class="breadcrumb-item">
+                {% if request.user|has_group:"ALP_PRE_SCHL_ALL" %}
+                <a href="{% url "alp:pre_test_add_all" %}" class="btn btn-success">
+                    <i class="icon-plus-sign icon-white"></i>
+                    {% trans "Add new Student" %}
+                </a>
+              {% endif %}
+              {% if not request.user|has_group:"ALP_PRE_SCHL_ALL" %}
+                <a href="{% url "alp:pre_test_add" %}" class="btn btn-success">
+                    <i class="icon-plus-sign icon-white"></i>
+                    {% trans "Add new Student" %}
+                </a>
+              {% endif %}
+            </li>
+            <li class="breadcrumb-item"><span class="badge badge-primary">{{ table.rows|length }}</span></li>
+        </ol>
+
+        <div class="pb-5 pr-5 list-filter">
+            <form action="" method="get" class="form form-inline">
+                    {% bootstrap_form filter.form layout='inline' %}
+                    {% bootstrap_button _('filter') button_class="btn-primary" %}
+                    {% bootstrap_button _('reset') button_type="link" button_class="btn-warning" href='/alp/pre-test/' %}
+            </form>
+        </div>
+        <div class="col-sm-10">
+            {% csrf_token %}
+            {% render_table table 'django_tables2/bootstrap.html' %}
+        </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    {% get_user_token request.user.id as user_token %}
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery-1.12.3.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.12.1.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/bootstrap-combobox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/registrations.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/validator.js' %}"></script>
+    <script>
+        var user_token = '{{ user_token }}';
+        var href_full_path = '{{ request.build_absolute_uri }}';
+        var csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+    </script>
+{% endblock %}
