@@ -15,7 +15,7 @@ from django.db import connection
 import codecs
 import logging
 import traceback
-from django.views.generic import ListView, FormView, TemplateView, UpdateView, View
+from django.views.generic import ListView, FormView, DeleteView, TemplateView, UpdateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect
 from django.db.models import Q, Sum, Avg, F, Func, When
@@ -188,11 +188,12 @@ class TeacherListView(LoginRequiredMixin,
     filterset_class = TeacherFilter
 
     def get_queryset(self):
-        force_default_language(self.request)
+
         clm_bridging_all = self.request.user.groups.filter(name='CLM_BRIDGING_ALL').exists()
         is_staff = self.request.user.is_staff
 
-        queryset = Teacher.objects.all()
+        queryset = Teacher.objects.filter(round__current_year=True)
+
 
         if clm_bridging_all or is_staff:
             queryset = Teacher.objects.all()
@@ -237,7 +238,7 @@ class TeacherAddView(LoginRequiredMixin,
         return self.success_url
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
+
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -286,7 +287,7 @@ class TeacherEditView(LoginRequiredMixin,
         return self.success_url
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
+
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -307,6 +308,21 @@ class TeacherEditView(LoginRequiredMixin,
         return super(TeacherEditView, self).form_valid(form)
 
 
+class TeacherDeleteView(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    model = Teacher
+    success_url = '/students/teacher-list/'
+    group_required = [u"CLM_TEACHER"]
+
+    def get_object(self):
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(Teacher, pk=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.delete()
+        return HttpResponseRedirect(self.success_url)
+
+
 class TeacherViewSet(mixins.RetrieveModelMixin,
                  mixins.ListModelMixin,
                  mixins.CreateModelMixin,
@@ -319,7 +335,7 @@ class TeacherViewSet(mixins.RetrieveModelMixin,
 
 
     def get_queryset(self):
-        force_default_language(self.request)
+
         clm_bridging_all = self.request.user.groups.filter(name='CLM_BRIDGING_ALL').exists()
         is_staff = self.request.user.is_staff
 

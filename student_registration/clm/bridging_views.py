@@ -36,7 +36,6 @@ from django_filters.views import FilterView
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableView
 from django_tables2.export.views import ExportMixin
 
-from student_registration.users.utils import force_default_language
 from student_registration.outreach.models import Child, OutreachChild
 from student_registration.outreach.serializers import ChildSerializer
 from student_registration.locations.models import Location
@@ -84,10 +83,6 @@ class CLMView(LoginRequiredMixin,
     template_name = 'pages/home.old.html'
 
     group_required = [u"CLM"]
-
-    def get_context_data(self, **kwargs):
-        force_default_language(self.request)
-        return {}
 
 
 def assessment_form(instance_id, stage, enrollment_model, assessment_slug, callback=''):
@@ -196,7 +191,6 @@ class BridgingAddView(LoginRequiredMixin,
         return self.success_url
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -294,7 +288,6 @@ class BridgingEditView(LoginRequiredMixin,
         return self.success_url
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -540,7 +533,6 @@ class BridgingPostAssessmentView(LoginRequiredMixin,
     group_required = [u"CLM_Bridging"]
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -601,7 +593,6 @@ class BridgingPostAssessmentView(LoginRequiredMixin,
         return super(BridgingPostAssessmentView, self).form_valid(form)
 
 
-
 class BridgingMidAssessmentView(LoginRequiredMixin,
                             GroupRequiredMixin,
                             FormView):
@@ -611,7 +602,6 @@ class BridgingMidAssessmentView(LoginRequiredMixin,
     group_required = [u"CLM_Bridging"]
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -685,7 +675,6 @@ class BridgingFollowupView(LoginRequiredMixin,
     group_required = [u"CLM_Bridging"]
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -717,7 +706,6 @@ class BridgingServiceView(LoginRequiredMixin,
     group_required = [u"CLM_Bridging"]
 
     def get_context_data(self, **kwargs):
-        force_default_language(self.request)
         """Insert the form into the context dict."""
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
@@ -741,8 +729,6 @@ class BridgingServiceView(LoginRequiredMixin,
 
 
 ####################### API VIEWS #############################
-
-
 
 
 class BridgingViewSet(mixins.RetrieveModelMixin,
@@ -787,7 +773,7 @@ class BridgingViewSet(mixins.RetrieveModelMixin,
 #     return JsonResponse(result)
 
 
-def BridgingMarkDeleteView(request, pk):
+def bridging_mark_delete_view(request, pk):
     if request.user.is_authenticated:
         try:
             registration = Bridging.objects.get(id=pk)
@@ -995,29 +981,6 @@ def search_clm_duplicate_registration(request):
 
         if str_partner_name != '':
             return JsonResponse({'result': str_partner_name})
-        # elif clm_type == 'BLN':
-        #     model = ABLN
-        #     str_partner_name = search_student(model, search_by, round_id, id_type, student_id, student_first_name,
-        #                                       student_father_name,student_last_name,student_mother_fullname,
-        #                                        phone_number, case_number, recorded_number,
-        #                                       parent_syrian_national_number, parent_sop_national_number,
-        #                                       parent_national_number,
-        #                                       parent_other_number)
-        #
-        #     if str_partner_name != '':
-        #         return JsonResponse({'result': str_partner_name})
-        # elif clm_type == 'ABLN':
-        #     model = BLN
-        #     str_partner_name = search_student(model, search_by, round_id, id_type, student_id, student_first_name,
-        #                                       student_father_name,student_last_name,student_mother_fullname,
-        #                                        phone_number, case_number, recorded_number,
-        #                                       parent_syrian_national_number, parent_sop_national_number,
-        #                                       parent_national_number,
-        #                                       parent_other_number)
-        #
-        #     if str_partner_name != '':
-        #
-        #         return JsonResponse({'result': str_partner_name})
 
     return JsonResponse({'result': ''})
 
@@ -1037,7 +1000,7 @@ def search_student(model, search_by, round_id, id_type, student_id, student_firs
         if all(value is not None for value in [round_id, student_first_name, student_father_name, student_last_name, student_mother_fullname]):
             qs = search_duplicate_student_name(model, round_id, student_first_name, student_father_name, student_last_name, student_mother_fullname)
     elif search_by == 'phone':
-        qs = search_duplicate_phone(model, round_id, student_first_name, phone_number)
+        qs = search_duplicate_phone(model, round_id, student_first_name, student_father_name, student_last_name, phone_number)
     elif search_by == 'id':
         qs = search_duplicate_case(model, round_id, id_type, student_first_name, case_number, recorded_number,
                                    parent_syrian_national_number, parent_sop_national_number, parent_national_number,
@@ -1105,13 +1068,15 @@ def search_duplicate_student_name(model, round_id, student_first_name, student_f
     return qs
 
 
-def search_duplicate_phone(model, round_id, student_first_name, phone_number):
+def search_duplicate_phone(model, round_id, student_first_name, student_father_name, student_last_name, phone_number):
     model = model
     qs = {}
     if round_id:
         qs = model.objects.filter(
             round=round_id,
             student__first_name=student_first_name,
+            student__father_name=student_father_name,
+            student__last_name=student_last_name,
             phone_number=phone_number,
             deleted=False
         ).values('id', 'partner__name', 'student__first_name', 'student__father_name',
@@ -1121,6 +1086,8 @@ def search_duplicate_phone(model, round_id, student_first_name, phone_number):
     else:
         qs = model.objects.filter(
             student__first_name=student_first_name,
+            student__father_name=student_father_name,
+            student__last_name=student_last_name,
             phone_number=phone_number,
             deleted=False
         ).values('id', 'partner__name', 'student__first_name', 'student__father_name',
@@ -1252,5 +1219,50 @@ def search_duplicate_case(model, round_id, id_type, student_first_name, case_num
                      'student__sex', 'student__birthday_day', 'student__birthday_month',
                      'student__birthday_year', 'round__name', 'internal_number').distinct()
     return qs
+
+
+ 
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
+
+@login_required(login_url='/users/login')
+def bridging_export_all(request, **kwargs):
+    try:
+        cursor = connection.cursor()
+        query = 'SELECT * FROM vw_bridging_extract WHERE id > 0'
+        cursor.execute(query)
+        data = cursor.fetchall()
+        headers = [col[0] for col in cursor.description]
+
+        # Create CSV in memory
+        csv_output = io.StringIO()
+        csv_output.write(u'\ufeff')  # UTF-8 BOM for Arabic Excel support
+        writer = csv.writer(csv_output)
+
+        writer.writerow(headers)
+        for row in data:
+            encoded_row = []
+            for cell in row:
+                if isinstance(cell, (datetime.date, datetime.datetime)):
+                    encoded_row.append(cell.strftime('%Y-%m-%d'))
+                elif isinstance(cell, bytes):
+                    # Decode byte strings safely
+                    encoded_row.append(cell.decode('utf-8', errors='replace'))
+                elif cell is None:
+                    encoded_row.append('')
+                else:
+                    encoded_row.append(unicode(cell))  # Ensure proper Unicode text
+            writer.writerow(encoded_row)
+
+        # Prepare downloadable response
+        file_name = "bridging_{}.csv".format(uuid.uuid4().hex)
+        response = HttpResponse(csv_output.getvalue().encode('utf-8'), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
+        return response
+
+    except Exception as e:
+        logging.error("Export failed: %s", traceback.format_exc())
+        return HttpResponse("An error occurred: " + str(e), status=500)
 
 

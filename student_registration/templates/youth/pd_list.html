@@ -2,12 +2,34 @@
 {% load static i18n %}
 {% load static i18n %}
 {% load render_table from django_tables2 %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load util_tags %}
 {% bootstrap_css %}
 
 {% block content %}
+<style>
+    .wide-dropdown {
+        width: 200px;
+    }
+    .wide-checkbox input[type="checkbox"] {
+      width: 50px;
+    }
+    /* Wider select box */
+    .long-select {
+        width: 100% !important;
+        white-space: nowrap; /* Prevents text from wrapping */
+        overflow-x: auto; /* Enables horizontal scroll */
+    }
 
+    /* Optional: improve scrollbar appearance */
+    .long-select::-webkit-scrollbar {
+        height: 6px;
+    }
+    .long-select::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 3px;
+    }
+</style>
 <div class="app-page-title">
                         <div class="page-title-wrapper">
                             <div class="page-title-heading">
@@ -17,7 +39,7 @@
                                             <i class="fa fa-user"></i>
                                         </span>
                                         <span class="d-inline-block">
-                                            {{ request.user.username }} - {{ request.user.youth_partner }}
+                                            {{ request.user.username }} - {{ request.user.partner }}
                                         </span>
                                     </div>
                                     <div class="page-title-subheading opacity-10">
@@ -159,7 +181,7 @@
     <div class="col-lg-12">
         <div class="card-hover-shadow-2x mb-3 card">
             <div class="card-body">
-                <div class="table-responsive dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive dataTables_wrapper dt-bootstrap5">
         {% csrf_token %}
         {% render_table table 'django_tables2/bootstrap.html' %}
                 </div>

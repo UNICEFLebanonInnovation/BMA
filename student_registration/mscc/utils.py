@@ -1,9 +1,11 @@
 # -- coding: utf-8 --
 from itertools import chain
+import logging
 
 from datetime import datetime, date
 from django.core.exceptions import ValidationError
 from django.db.models import Exists, OuterRef, Subquery
+from django import forms
 from import_export import resources, fields
 
 from student_registration.outreach.models import OutreachChild
@@ -18,6 +20,8 @@ from student_registration.clm.models import (
 )
 from student_registration.attendances.models import MSCCAttendance, MSCCAttendanceChild
 from student_registration.mscc.models import Registration, EducationService, Referral
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -358,7 +362,7 @@ def create_attendance(data, center_id):
             attendance_child.save()
         return True
     except Exception as ex:
-        print(ex)
+        logger.exception(ex)
         return False
 
 
@@ -437,7 +441,7 @@ def load_child_attendance(center_id, round_id, attendance_date, education_progra
         return result
 
     except Exception as ex:
-        print(ex)
+        logger.exception(ex)
         return []
 
 
@@ -480,11 +484,11 @@ def update_child_attendance(registration_id, education_program, old_class_sectio
                         old_attendance.delete()
 
                     except MSCCAttendance.DoesNotExist:
-                        print("Old attendance does not exist.")
+                        logger.warning("Old attendance does not exist.")
 
 
     except Exception as ex:
-        print(ex)
+        logger.exception(ex)
         return []
 
 
@@ -593,6 +597,15 @@ def load_dashboard_data(param, grouping):
     return rows
 
 
+class TrimmedDateField(forms.DateField):
+    """DateField that strips whitespace before parsing."""
+
+    def to_python(self, value):
+        if hasattr(value, 'strip'):
+            value = value.strip()
+        return super().to_python(value)
+
+
 def validate_date(date_str):
 
     if not date_str:
@@ -601,6 +614,10 @@ def validate_date(date_str):
     # If the value is already a date object, return it as is
     if isinstance(date_str, date):
         return date_str
+
+    # Trim white spaces from the provided value
+    if hasattr(date_str, 'strip'):
+        date_str = date_str.strip()
 
     # Supported date format
     formats = ['%Y-%m-%d']

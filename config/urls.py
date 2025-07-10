@@ -58,7 +58,7 @@ from student_registration.locations.views import (
     ProgramStaffViewSet
 )
 
-from student_registration.users.views import LoginRedirectView, home, login_success
+from student_registration.users.views import LoginRedirectView, home, login_success, LandingPage
 from student_registration.enrollments.views import (
     EnrollmentViewSet,
     EnrollmentImportViewSet,
@@ -127,7 +127,8 @@ urlpatterns = [
     # re_path(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
     re_path(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
     re_path(r'^login-redirect/$', LoginRedirectView.as_view(), name='login-redirect'),
-    re_path(r'login_success/$', login_success, name='login_success'),
+    re_path(r'^login-success/$', login_success, name='login_success'),
+    re_path(r'^landing_page/$', LandingPage.as_view(), name='landing_page'),
     re_path(r'^student-autocomplete/$', StudentAutocomplete.as_view(), name='student_autocomplete'),
     re_path(r'^school-autocomplete/$', SchoolAutocomplete.as_view(), name='school_autocomplete'),
     re_path(r'^location-autocomplete/$', LocationAutocomplete.as_view(), name='location_autocomplete'),
@@ -142,7 +143,7 @@ urlpatterns = [
     re_path(r'^students/', include('student_registration.students.urls', namespace='students')),
     # re_path(r'^alp/', include('student_registration.alp.urls', namespace='alp')),
     re_path(r'^clm/', include('student_registration.clm.urls', namespace='clm')),
-    re_path(r'^MSCC/', include('student_registration.mscc.urls', namespace='mscc')),
+    re_path(r'^mscc/', include('student_registration.mscc.urls', namespace='mscc')),
     re_path(r'^youth/', include('student_registration.youth.urls', namespace='youth')),
     re_path(r'^outreach/', include('student_registration.outreach.urls', namespace='outreach')),
     re_path(r'^attendances/', include('student_registration.attendances.urls', namespace='attendances')),

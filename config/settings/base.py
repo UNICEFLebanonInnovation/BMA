@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 from __future__ import absolute_import, unicode_literals
 
 import environ
+import logging
+
+logger = logging.getLogger(__name__)
 
 ROOT_DIR = environ.Path(__file__) - 3  # (student_registration/config/settings/base.py - 3 = student_registration/)
 APPS_DIR = ROOT_DIR.path('student_registration')
@@ -29,9 +32,9 @@ if READ_DOT_ENV_FILE:
     # that is to say variables from the .env files will only be used if not defined
     # as environment variables.
     env_file = str(ROOT_DIR.path('.env'))
-    print('Loading : {}'.format(env_file))
+    logger.info('Loading : %s', env_file)
     env.read_env(env_file)
-    print('The .env file has been loaded. See base.py for more information')
+    logger.info('The .env file has been loaded. See base.py for more information')
 
 
 # APP CONFIGURATION
@@ -56,7 +59,7 @@ DJANGO_APPS = [
     # 'suit',
     'jazzmin',
     'django.contrib.admin',
-    'markdown_deux',  # Required for Knowledgebase item formatting
+    #'markdown_deux',  # Required for Knowledgebase item formatting
     # 'bootstrapform',  # Required for nicer formatting of forms with the default templates
     # 'helpdesk',  # This is us!
     'prettyjson',
@@ -64,8 +67,9 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
+    "crispy_bootstrap3",
     # "crispy_bootstrap5",
-    "crispy_bootstrap4",
+    # "crispy_bootstrap4",
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
@@ -75,8 +79,8 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'django_makemessages_xgettext',
 
-    # 'django_bootstrap5',
-    'bootstrap4',
+    'django_bootstrap5',
+    # 'bootstrap4',
     'bootstrap3_datetime',
     'import_export',
     'django_tables2',
@@ -128,7 +132,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # 'student_registration.user_activity.UserActivityMiddleware',
+    "student_registration.user_activity.UserActivityMiddleware",
     # "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
@@ -182,7 +186,7 @@ MANAGERS = ADMINS
 DATABASES = {
     # 'default': env.db('DATABASE_URL', default='postgres:///mscc_10012023'),
     'default': env.db('DATABASE_URL',
-    default='postgresql://lebclmprod:clmp!0ck3din@leb-clm-prod-flex-12.postgres.database.azure.com:5432/new_staging_11062025'),
+    default='postgresql://lebclmprod:clmp!0ck3din@leb-clm-prod-flex-14.postgres.database.azure.com:5432/new_staging_13062025'),
 }
 DJANGO_READ_DOT_ENV_FILE = True
 
@@ -259,8 +263,9 @@ TEMPLATES = [
 ]
 
 # See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap3", "bootstrap5"]
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 {% extends "mscc/base.html" %}
-{% load static i18n %}
-{% load static i18n %}
-{% load bootstrap4 %}
+{% load staticfiles i18n %}
+{% load static %}
+{% load bootstrap3 %}
 {% load util_tags %}
 {% bootstrap_css %}
 
@@ -15,6 +15,11 @@
 .attendance_day_off label.active {
     background-color: #3f6ad8 !important;
     color: white !important;
+}
+.is-invalid {
+    border-color: red !important;
+    background-color: #ffe6e6 !important;
+    color: black !important;
 }
 
 </style>
@@ -35,7 +40,7 @@
                                         <nav class="" aria-label="breadcrumb">
                                             <ol class="breadcrumb">
                                                 <li class="breadcrumb-item">
-                                                    <a href="/">
+                                                    <a href="{% url 'mscc:list' %}">
                                                         <i aria-hidden="true" class="fa fa-home"></i>
                                                     </a>
                                                 </li>
@@ -204,7 +209,7 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script type="text/javascript" language="javascript" src="{% static 'js/mscc/attendance.js' %}?v=34"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/mscc/attendance.js' %}?v=40"></script>
     <script type="text/javascript" src="{% static 'js/mscc/general.js' %}?v=1"></script>
 
 {% endblock %}

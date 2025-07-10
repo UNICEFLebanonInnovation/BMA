@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 
-from student_registration.attendances.models import CLMAttendance, CLMAttendanceStudent
+from student_registration.attendances.models import CLMAttendance, CLMAttendanceStudent, CLMStudentAbsences, CLMStudentTotalAttendance
 from student_registration.schools.models import (
     School,
     PartnerOrganization,
@@ -85,6 +85,7 @@ class AttendanceView(LoginRequiredMixin,
 
 
 def save_attendance_children(request):
+
     body_unicode = request.body.decode('utf-8')
 
     if body_unicode.strip():
@@ -92,9 +93,12 @@ def save_attendance_children(request):
             data = json.loads(body_unicode)
             result = create_attendance(data)
             return JsonResponse({'result': result})
-
         except Exception as e:
-            pass
+            return JsonResponse({'error': 'Failed to save attendance.'}, status=500)
+            # return JsonResponse({'error': 'Error processing attendance', 'details': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Empty request body'}, status=400)
+
 
 
 class LoadAttendanceChildren(LoginRequiredMixin, TemplateView):

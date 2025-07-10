@@ -2,7 +2,7 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 {% load static i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load util_tags %}
 {% load youth_tags %}
 {% bootstrap_css %}
@@ -63,22 +63,11 @@
                                                     <em>2</em><span>Donors</span>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="#step-3">
-                                                    <em>3</em><span>Master Programs</span>
-                                                </a>
-                                            </li>
-                                          {% else %}
-                                            <li>
-                                                <a href="#step-2">
-                                                    <em>2</em><span>Master Programs</span>
-                                                </a>
-                                            </li>
                                            {% endif %}
                                         </ul>
                                         <div class="form-wizard-content">
 
-                                           {% crispy form 'bootstrap4' %}
+                                           {% crispy form 'bootstrap3' %}
                                         </div>
                                     </div>
                                     <div class="divider"></div>

@@ -106,7 +106,8 @@ class MainForm(forms.ModelForm):
     )
     child_p_code = forms.CharField(
         label=_('Insert Pcode if the child lives in Internal Settlement/Camp'),
-        widget=forms.TextInput, required=False
+        widget=forms.TextInput, required=False,
+        max_length=50
     )
     child_address = forms.CharField(
         label=_("Registered child Home Address (Village, Street, Building/Camp, Cadaster)"),
@@ -467,296 +468,13 @@ class MainForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_show_labels = True
         self.helper.form_action = form_action
-        self.helper.layout = Layout(
-            Div(
-                Div(
-                    HTML('<span class="badge-form badge-pill">1</span>'),
-                    Div('child_first_name', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">2</span>'),
-                    Div('child_father_name', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">3</span>'),
-                    Div('child_last_name', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">4</span>'),
-                    Div('child_birthday_year', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">5</span>'),
-                    Div('child_birthday_month', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">6</span>'),
-                    Div('child_birthday_day', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">7</span>'),
-                    Div('child_gender', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">8</span>'),
-                    Div('child_mother_fullname', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">9</span>'),
-                    Div('child_nationality', css_class='col-md-3'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('child_nationality_other', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">10</span>'),
-                    Div('child_p_code', css_class='col-md-5'),
-                    HTML('<span class="badge-form-2 badge-pill">11</span>'),
-                    Div('child_address', css_class='col-md-6'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">12</span>'),
-                    Div('child_living_arrangement', css_class='col-md-4'),
-                    HTML('<span class="badge-form-2 badge-pill">13</span>'),
-                    Div('child_disability', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">14</span>'),
-                    Div('child_marital_status', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">15</span>'),
-                    Div('child_have_children', css_class='col-md-4', css_id='child_have_children'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('child_children_number', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">16</span>'),
-                    Div('child_have_sibling', css_class='col-md-4'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('child_siblings_have_disability', css_class='col-md-4', css_id='child_siblings_have_disability'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">17</span>'),
-                    Div('child_mother_pregnant_expecting', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">18</span>'),
-                    Div('partner_unique_number', css_class='col-md-7'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">19</span>'),
-                    Div('source_of_identification', css_class='col-md-7'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('source_of_identification_specify', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-3 badge-pill">20</span>'),
-                    Div('cash_support_programmes', css_class='col-md-9 multiple-choice'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">21</span>'),
-                    Div('child_fe_unique_id', css_class='col-md-4'),
-                    css_class='row card-body d-none', id='child_fe_unique_id_block'
-                ),
-                css_id='step-1',
-            ),
-            Div(
-                Div(
-                    HTML('<span class="badge-form badge-pill">1</span>'),
-                    Div('father_educational_level', css_class='col-md-5'),
-                    HTML('<span class="badge-form badge-pill">2</span>'),
-                    Div('mother_educational_level', css_class='col-md-6'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">3</span>'),
-                    Div('first_phone_number', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">4</span>'),
-                    Div('first_phone_number_confirm', css_class='col-md-4'),
-                    HTML('<span class="badge-form badge-pill">5</span>'),
-                    Div('first_phone_owner', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">6</span>'),
-                    Div('second_phone_number', css_class='col-md-3'),
-                    HTML('<span class="badge-form badge-pill">7</span>'),
-                    Div('second_phone_number_confirm', css_class='col-md-4'),
-                    HTML('<span class="badge-form badge-pill">8</span>'),
-                    Div('second_phone_owner', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form badge-pill">9</span>'),
-                    Div('children_number_under18', css_class='col-md-5'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">10</span>'),
-                    Div('main_caregiver', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('main_caregiver_other', css_class='col-md-4'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">11</span>'),
-                    Div('caregiver_first_name', css_class='col-md-3'),
-                    HTML('<span class="badge-form-2 badge-pill">12</span>'),
-                    Div('caregiver_middle_name', css_class='col-md-3'),
-                    HTML('<span class="badge-form-2 badge-pill">13</span>'),
-                    Div('caregiver_last_name', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">14</span>'),
-                    Div('caregiver_mother_name', css_class='col-md-3'),
-                    HTML('<span class="badge-form-2 badge-pill">15</span>'),
-                    Div('main_caregiver_nationality', css_class='col-md-3'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('main_caregiver_nationality_other', css_class='col-md-3'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-2 badge-pill">16</span>'),
-                    Div('id_type', css_class='col-md-6'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('case_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('case_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id1',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_individual_case_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_individual_case_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id1',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('individual_case_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('individual_case_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id1',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('recorded_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('recorded_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id2',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id3',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id3',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_syrian_national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_syrian_national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id4',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('syrian_national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('syrian_national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id4',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_sop_national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_sop_national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id5',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('sop_national_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('sop_national_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id5',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_other_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_other_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id6',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('other_number', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('other_number_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id6',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_extract_record', css_class='col-md-5'),
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('parent_extract_record_confirm', css_class='col-md-6'),
-                    css_class='row card-body child_id child_id7',
-                ),
-                css_id='step-2',
-            ),
-            Div(
-                Div(
-                    HTML('<span class="badge-form badge-pill">1</span>'),
-                    Div('have_labour', css_class='col-md-5'),
-                    Div('labour_type', css_class='col-md-6', css_id='labours'),
-                    css_class='row card-body',
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('labour_type_specify', css_class='col-md-11'),
-                    css_class='row card-body',
-                    id='labour_details_1'
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('labour_hours', css_class='col-md-5', css_id='labour_hours'),
-                    Div('labour_weekly_income', css_class='col-md-6'),
-                    css_class='row card-body',
-                    id='labour_details_2'
-                ),
-                Div(
-                    HTML('<span class="badge-form-0 badge-pill"></span>'),
-                    Div('labour_condition', css_class='col-md-7 multiple-choice'),
-                    css_class='row card-body',
-                    id='labour_details_3'
-                ),
-                #
-                FormActions(
-                    Submit('save', 'Save',
-                           css_class='btn-shadow btn-wide float-right btn-pill mr-3 btn-hover-shine btn btn-success'),
-                    Reset('reset', 'Reset',
-                          css_class='btn-shadow btn-wide float-right btn-pill mr-3 btn-hover-shine btn btn-warning'),
-
-                ),
-                css_id='step-3',
-            ),
-        )
 
     def clean(self):
         cleaned_data = super(MainForm, self).clean()
+
+        child_p_code = cleaned_data.get("child_p_code")
+        if child_p_code and len(child_p_code) > 50:
+            self.add_error('child_p_code', _('P-Code must not exceed 50 characters.'))
 
         # check if date is valid
         year = 0
@@ -826,30 +544,12 @@ class MainForm(forms.ModelForm):
             if main_caregiver == 'Other' and not main_caregiver_other:
                 self.add_error('main_caregiver_other', 'This field is required')
 
-            main_caregiver_nationality = cleaned_data.get("main_caregiver_nationality")
-            main_caregiver_nationality_other = cleaned_data.get("main_caregiver_nationality_other")
-            if main_caregiver_nationality and main_caregiver_nationality.id == 6 and not main_caregiver_nationality_other:
-                self.add_error('main_caregiver_nationality_other', 'This field is required')
 
             children_number_under18 = cleaned_data.get("children_number_under18")
             if not children_number_under18:
                 self.add_error('children_number_under18', 'This field is required')
 
-            caregiver_first_name = cleaned_data.get("caregiver_first_name")
-            if not caregiver_first_name:
-                self.add_error('caregiver_first_name', 'This field is required')
 
-            caregiver_middle_name = cleaned_data.get("caregiver_middle_name")
-            if not caregiver_middle_name:
-                self.add_error('caregiver_middle_name', 'This field is required')
-
-            caregiver_last_name = cleaned_data.get("caregiver_last_name")
-            if not caregiver_last_name:
-                self.add_error('caregiver_last_name', 'This field is required')
-
-            caregiver_mother_name = cleaned_data.get("caregiver_mother_name")
-            if not caregiver_mother_name:
-                self.add_error('caregiver_mother_name', 'This field is required')
 
             have_labour = cleaned_data.get("have_labour")
             labour_type = cleaned_data.get("labour_type")
@@ -880,6 +580,7 @@ class MainForm(forms.ModelForm):
             individual_case_number_confirm = cleaned_data.get("individual_case_number_confirm")
 
             # UNHCR Registered
+
             if id_type and id_type.id == 1:
                 if not case_number:
                     self.add_error('case_number', 'This field is required')
@@ -1006,13 +707,14 @@ class MainForm(forms.ModelForm):
                     msg = "The Parent Extract Record are not matched"
                     self.add_error('parent_extract_record_confirm', msg)
 
-            child_living_arrangement = cleaned_data.get("caregiver_mother_name")
+            child_living_arrangement = cleaned_data.get("child_living_arrangement")
             if not child_living_arrangement:
                 self.add_error('child_living_arrangement', 'This field is required')
 
-            cash_support_programmes = cleaned_data.get("caregiver_mother_name")
+            cash_support_programmes = cleaned_data.get("cash_support_programmes")
             if not cash_support_programmes:
                 self.add_error('cash_support_programmes', 'This field is required')
+
 
     def save(self, request=None, instance=None):
 

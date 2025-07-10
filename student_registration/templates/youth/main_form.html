@@ -2,7 +2,7 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 {% load static i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load util_tags %}
 {% bootstrap_css %}
 
@@ -40,7 +40,7 @@
                                                     {% if form.instance.id == None %}
                                                       <a href="{% url 'youth:list' %}">List</a>
                                                     {% else %}
-                                                      <a href="/youth/Child-Profile/{{ form.instance.id }}">Youth Profile</a>
+                                                      <a href="{% url 'youth:child_profile' form.instance.id %}">Youth Profile</a>
                                                     {% endif %}
                                                 </li>
 <!--                                                <li class="breadcrumb-item">-->
@@ -95,7 +95,7 @@
                                         </ul>
                                         <div class="form-wizard-content">
 
-                                           {% crispy form 'bootstrap4' %}
+                                           {% crispy form 'bootstrap3' %}
                                         </div>
                                     </div>
                                     <div class="divider"></div>
@@ -197,8 +197,8 @@
 
 {% block extra_js %}
 
-    <script type="text/javascript" language="javascript" src="{% static 'js/validator.js' %}?v=1"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/youth/youth.js' %}?v=20"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/validator.js' %}?v=4"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/youth/youth.js' %}?v=24"></script>
     <script type="text/javascript" src="{% static 'js/youth/general.js' %}?v=1"></script>
 
     <script>

@@ -303,7 +303,7 @@ urlpatterns = [
     ),
     re_path(
         r'^inclusion-delete/(?P<pk>[\w.@+-]+)/$',
-        view=inclusion_views.InclusionDeleteView,
+        view=inclusion_views.inclusion_delete_view,
         name='inclusion_delete'
     ),
     re_path(
@@ -363,6 +363,11 @@ urlpatterns = [
         name='bridging_export'
     ),
     re_path(
+        r'^bridging-export-all/$',
+        view=bridging_views.bridging_export_all,
+        name='bridging_export_all'
+    ),
+    re_path(
         r'^bridging-school-export-data/(?P<school_id>[\w.@+-]+)/$',
         view=bridging_views.bridging_school_export,
         name='bridging_school_export_data'
@@ -385,27 +390,32 @@ urlpatterns = [
     ),
     re_path(
         r'^bridging-delete/(?P<pk>[\w.@+-]+)/$',
-        view=bridging_views.BridgingMarkDeleteView,
+        view=bridging_views.bridging_mark_delete_view,
         name='bridging_delete'
     ),
     re_path(
-        r'^Attendance/$',
+        r'^attendance/$',
         view=attendance_views.AttendanceView.as_view(),
         name='attendance'
     ),
     re_path(
-        'Load-Attendance-Children/$',
+        r'^load-attendance-children/$',
         view=attendance_views.LoadAttendanceChildren.as_view(),
         name='load_attendance_children'
     ),
     re_path(
-        'Save-Attendance-Children/$',
+        r'^save-attendance-children/$',
         view=attendance_views.save_attendance_children,
         name='save_attendance_children'
     ),
     re_path(
-        'Attendance-Child/(?P<child>[\w.@+-]+)/$',
+        r'^attendance-child/(?P<child>[\w.@+-]+)/$',
         view=attendance_views.LoadAttendanceChild.as_view(),
         name='attendance_child'
+    ),
+    re_path(
+        r'^Dashboard/$',
+        view=views.DashboardView.as_view(),
+        name='dashboard'
     ),
 ]
